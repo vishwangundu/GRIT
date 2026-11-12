@@ -4,9 +4,9 @@ import { AppShell, type NavItem } from '@/components/shell/AppShell';
 import { NotificationBell } from '@/components/shell/NotificationBell';
 
 const NAV: readonly NavItem[] = [
-  { href: '/student', label: 'Dashboard' },
-  { href: '/student/book', label: 'Book' },
-  { href: '/student/leaderboard', label: 'Leaderboard' },
+  { href: '/student', label: 'Dashboard', icon: 'dashboard' },
+  { href: '/student/book', label: 'Book', icon: 'book' },
+  { href: '/student/leaderboard', label: 'Leaderboard', icon: 'leaderboard' },
 ];
 
 export default function StudentLayout({

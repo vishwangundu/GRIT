@@ -3,12 +3,13 @@
 import { type ReactElement, useState } from 'react';
 
 import { CancelInterviewDialog } from '@/components/schedule/CancelInterviewDialog';
-import { Button } from '@/components/ui/Button';
+import { IconButton } from '@/components/ui/IconButton';
+import { CloseIcon, SwapIcon } from '@/components/ui/icons';
 import { formatDateTime } from '@/lib/time';
 import type { BookedRow } from '@/types/models';
 
 import { ReassignDialog } from './ReassignDialog';
-import { CELL, StudentCell, Table } from './Table';
+import { CELL, InterviewerCell, StudentCell, Table } from './Table';
 
 const HEADERS = [
   'Student',
@@ -34,26 +35,27 @@ export function BookedTable({ rows, onChanged }: Readonly<Props>): ReactElement 
           <tr key={row.booking_id}>
             <StudentCell name={row.name} campus={row.campus} />
             <td className={CELL}>{formatDateTime(row.start_at)}</td>
-            <td className={CELL}>{row.interviewer_name}</td>
+            <InterviewerCell name={row.interviewer_name} />
             <td className={CELL}>{formatDateTime(row.booked_at)}</td>
             <td className={CELL}>{row.reschedules_used}</td>
-            <td className={`${CELL} whitespace-nowrap`}>
-              <Button
-                variant="ghost"
+            <td className={`${CELL} whitespace-nowrap text-right`}>
+              <IconButton
+                label={`Reassign interviewer: ${row.name}`}
                 onClick={() => {
                   setReassigning(row);
                 }}
               >
-                Reassign
-              </Button>
-              <Button
-                variant="ghost"
+                <SwapIcon />
+              </IconButton>
+              <IconButton
+                label={`Cancel interview: ${row.name}`}
+                tone="danger"
                 onClick={() => {
                   setCancelling(row);
                 }}
               >
-                Cancel
-              </Button>
+                <CloseIcon />
+              </IconButton>
             </td>
           </tr>
         ))}

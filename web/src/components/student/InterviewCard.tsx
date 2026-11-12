@@ -38,7 +38,7 @@ export function InterviewCard({
         </>
       }
     >
-      <h1 className="mb-3 text-2xl">{spec.title}</h1>
+      <h2 className="mb-3 text-2xl">{spec.title}</h2>
       {spec.kind === 'skills_left' ? <SkillsLeft rung={rung} /> : null}
       {spec.kind === 'ready' ? <ReadyDetails journey={journey} last={last} /> : null}
       {booking && (spec.kind === 'ticket' || spec.kind === 'live') ? (

@@ -68,3 +68,90 @@ h3 {
 dialog::backdrop {
   background: rgb(26 22 21 / 0.45);
 }
+
+/* Data tables turn into one card per row on phones. Table.tsx adds the per-column
+   labels (td::before content) from its headers. */
+@media (max-width: 767.98px) {
+  .grit-table-wrap {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+  }
+  .grit-table,
+  .grit-table tbody {
+    display: block;
+    min-width: 0;
+  }
+  .grit-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .grit-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .grit-table tr {
+    display: block;
+    border: 1px solid var(--color-line);
+    border-radius: 16px;
+    background: #fff;
+    padding: 4px 14px;
+    box-shadow: 0 1px 2px rgb(26 22 21 / 0.04);
+  }
+  .grit-table td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border: 0;
+    border-top: 1px solid var(--color-line);
+    padding: 10px 0;
+    text-align: right;
+  }
+  .grit-table td:first-child {
+    border-top: 0;
+    justify-content: flex-start;
+    text-align: left;
+  }
+  .grit-table td::before {
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    text-align: left;
+  }
+}
+
+/* Laptop and desktop: the frame (header + side nav) stays put and only data tables
+   scroll, inside their card, with the header row pinned. Pages pass the height down
+   with grit-fill; tables use grit-scroll. Phones keep normal page scrolling. */
+@utility grit-fill {
+  @media (width >= 64rem) {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@utility grit-scroll {
+  @media (width >= 64rem) {
+    flex: 1 1 auto;
+    min-height: 16rem;
+    overflow: auto;
+
+    & thead th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: var(--color-ink);
+    }
+  }
+}

@@ -1,5 +1,6 @@
 import { Fragment, type ReactElement } from 'react';
 
+import { PersonName } from '@/components/ui/Avatar';
 import { Chip } from '@/components/ui/Chip';
 import { Empty } from '@/components/ui/StateView';
 import { useNow } from '@/hooks/use-now';
@@ -41,9 +42,13 @@ function Item({
       <span className="w-40 shrink-0 text-sm font-semibold">
         {formatRange(item.start_at, item.end_at)}
       </span>
-      <span className="flex-1 text-sm">
-        {item.student_name ?? <span className="text-muted">No student</span>}
-        {item.badge_name ? <span className="text-muted"> · {item.badge_name}</span> : null}
+      <span className="flex flex-1 items-center gap-2 text-sm">
+        {item.student_name ? (
+          <PersonName name={item.student_name} nameClassName="" />
+        ) : (
+          <span className="text-muted">No student</span>
+        )}
+        {item.badge_name ? <span className="text-muted">· {item.badge_name}</span> : null}
       </span>
       <Chip tone={chip.tone}>{chip.label}</Chip>
     </>

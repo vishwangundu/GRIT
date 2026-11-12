@@ -15,5 +15,6 @@ export const PATHS = {
     if (badgeId !== null) query.set('badge_id', String(badgeId));
     return `/admin/tracker?${query.toString()}`;
   },
+  users: '/admin/users',
   reassignOptions: (bookingId: string) => `/admin/bookings/${bookingId}/reassign-options`,
 } as const;

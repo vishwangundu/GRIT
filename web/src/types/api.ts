@@ -355,6 +355,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Users */
+        get: operations["list_users_api_v1_admin_users_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/nudges": {
         parameters: {
             query?: never;
@@ -1374,6 +1391,15 @@ export interface components {
             /** Is Overdue */
             is_overdue: boolean;
         };
+        /** RoleCounts */
+        RoleCounts: {
+            /** Student */
+            student: number;
+            /** Interviewer */
+            interviewer: number;
+            /** Admin */
+            admin: number;
+        };
         /** RulesResponse */
         RulesResponse: {
             /** Book Min Lead Hours */
@@ -1595,6 +1621,42 @@ export interface components {
              * @default []
              */
             result_rows: components["schemas"]["ResultRow"][];
+        };
+        /** UserRow */
+        UserRow: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "student" | "interviewer" | "admin";
+            /** Name */
+            name: string;
+            /** Email */
+            email: string;
+            /**
+             * Joined At
+             * Format: date-time
+             */
+            joined_at: string;
+            /** Campus */
+            campus: string | null;
+            /** Batch */
+            batch: string | null;
+            /** Miles */
+            miles: number | null;
+            /** Badge Count */
+            badge_count: number;
+        };
+        /** UsersResponse */
+        UsersResponse: {
+            counts: components["schemas"]["RoleCounts"];
+            /** Users */
+            users: components["schemas"]["UserRow"][];
         };
         /** ValidationError */
         ValidationError: {
@@ -2253,6 +2315,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_users_api_v1_admin_users_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UsersResponse"];
                 };
             };
         };

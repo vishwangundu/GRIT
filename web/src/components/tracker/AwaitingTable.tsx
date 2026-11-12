@@ -2,7 +2,8 @@
 
 import type { ReactElement } from 'react';
 
-import { Button } from '@/components/ui/Button';
+import { IconButton } from '@/components/ui/IconButton';
+import { BellIcon } from '@/components/ui/icons';
 import { Chip } from '@/components/ui/Chip';
 import { InlineError } from '@/components/ui/StateView';
 import { useAction } from '@/hooks/use-action';
@@ -11,7 +12,7 @@ import type { Tone } from '@/lib/tones';
 import { formatDateTime, formatDuration, msUntil } from '@/lib/time';
 import type { AwaitingRow } from '@/types/models';
 
-import { CELL, StudentCell, Table } from './Table';
+import { CELL, InterviewerCell, StudentCell, Table } from './Table';
 
 const HEADERS = ['Student', 'Interview', 'Interviewer', 'Status', ''] as const;
 
@@ -24,7 +25,7 @@ function status(row: AwaitingRow): { tone: Tone; label: string } {
 export function AwaitingTable({ rows }: Readonly<{ rows: AwaitingRow[] }>): ReactElement {
   const action = useAction();
   return (
-    <div className="flex flex-col gap-2">
+    <div className="grit-fill flex flex-col gap-2">
       {action.message ? (
         <p role="status" className="text-sm text-grit-green">
           {action.message}
@@ -38,14 +39,14 @@ export function AwaitingTable({ rows }: Readonly<{ rows: AwaitingRow[] }>): Reac
             <tr key={row.booking_id}>
               <StudentCell name={row.name} campus={row.campus} />
               <td className={CELL}>{formatDateTime(row.start_at)}</td>
-              <td className={CELL}>{row.interviewer_name}</td>
+              <InterviewerCell name={row.interviewer_name} />
               <td className={CELL}>
                 <Chip tone={chip.tone}>{chip.label}</Chip>
               </td>
-              <td className={CELL}>
-                <Button
-                  variant="ghost"
-                  disabled={row.status === 'in_progress' || action.isBusy}
+              <td className={`${CELL} text-right`}>
+                <IconButton
+                  label={`Remind ${row.interviewer_name} to record the result`}
+                  isDisabled={row.status === 'in_progress' || action.isBusy}
                   onClick={() =>
                     void action.run(async () => {
                       await remindInterviewer(row.booking_id);
@@ -53,8 +54,8 @@ export function AwaitingTable({ rows }: Readonly<{ rows: AwaitingRow[] }>): Reac
                     })
                   }
                 >
-                  Remind interviewer
-                </Button>
+                  <BellIcon />
+                </IconButton>
               </td>
             </tr>
           );

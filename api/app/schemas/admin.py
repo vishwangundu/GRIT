@@ -151,3 +151,26 @@ class FlagDecided(BaseModel):
     flag_id: UUID
     journey_state: JourneyState
     award_status: str
+
+
+class UserRow(BaseModel):
+    id: UUID
+    role: Literal["student", "interviewer", "admin"]
+    name: str
+    email: str
+    joined_at: datetime
+    campus: str | None
+    batch: str | None
+    miles: int | None
+    badge_count: int
+
+
+class RoleCounts(BaseModel):
+    student: int
+    interviewer: int
+    admin: int
+
+
+class UsersResponse(BaseModel):
+    counts: RoleCounts
+    users: list[UserRow]

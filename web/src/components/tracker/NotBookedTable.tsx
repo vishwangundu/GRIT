@@ -33,7 +33,7 @@ export function NotBookedTable({ rows, slowAfterDays, onChanged }: Readonly<Prop
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="grit-fill flex flex-col gap-3">
       <div className="flex flex-wrap items-center gap-3">
         <Button
           variant="secondary"

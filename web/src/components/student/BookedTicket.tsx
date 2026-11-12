@@ -1,5 +1,6 @@
 import type { ReactElement } from 'react';
 
+import { PersonName } from '@/components/ui/Avatar';
 import { ButtonLink } from '@/components/ui/ButtonLink';
 import { plural } from '@/lib/labels';
 import { formatDate, formatRange } from '@/lib/time';
@@ -26,7 +27,9 @@ export function BookedTicket({ journey, booking, isLive }: Readonly<Props>): Rea
         <dt className="text-muted">Time</dt>
         <dd className="font-semibold">{formatRange(booking.start_at, booking.end_at)}</dd>
         <dt className="text-muted">Interviewer</dt>
-        <dd className="font-semibold">{booking.interviewer_name}</dd>
+        <dd>
+          <PersonName name={booking.interviewer_name} />
+        </dd>
         <dt className="text-muted">Where</dt>
         <dd className="font-semibold">Online (Google Meet)</dd>
       </dl>

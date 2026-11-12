@@ -1,16 +1,29 @@
 import type { ReactElement, ReactNode } from 'react';
 
+import { CREST } from '@/components/shell/Wordmark';
 import type { ApiError } from '@/lib/api';
 
 import { Button } from './Button';
 
+/** GRIT crest inside a turning ring. The label is for screen readers only. */
 export function Loading({ label = 'Loading…' }: Readonly<{ label?: string }>): ReactElement {
   return (
-    <div
-      role="status"
-      className="animate-pulse rounded-2xl border-2 border-dashed border-[#bbb] bg-white p-6 text-sm text-muted"
-    >
-      {label}
+    <div role="status" className="flex justify-center py-12">
+      <span className="relative flex h-16 w-16 items-center justify-center">
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 rounded-full border-[3px] border-line border-t-grit-blue-strong motion-safe:animate-spin"
+        />
+        <svg
+          viewBox="0 0 21 27"
+          aria-hidden="true"
+          focusable="false"
+          className="h-7 w-auto text-ink motion-safe:animate-pulse"
+        >
+          <path d={CREST} fill="currentColor" />
+        </svg>
+      </span>
+      <span className="sr-only">{label}</span>
     </div>
   );
 }

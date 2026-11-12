@@ -7,6 +7,8 @@ import type { ReactElement } from 'react';
 export interface NavItem {
   href: string;
   label: string;
+  /** Icon shown in the side nav. */
+  icon: 'dashboard' | 'book' | 'leaderboard' | 'schedule' | 'availability' | 'tracker' | 'users';
 }
 
 /** Section tabs under the header. Hidden when a role has only one page. */

@@ -24,7 +24,7 @@ export function Tabs<K extends string>({
     <div
       role="tablist"
       aria-label={label}
-      className="flex gap-1 overflow-x-auto overflow-y-hidden shadow-[inset_0_-1px_0_var(--color-line)]"
+      className="flex shrink-0 gap-1 overflow-x-auto overflow-y-hidden shadow-[inset_0_-1px_0_var(--color-line)]"
     >
       {tabs.map((tab) => (
         <button

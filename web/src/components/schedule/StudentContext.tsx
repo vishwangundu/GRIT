@@ -1,5 +1,6 @@
 import type { ReactElement } from 'react';
 
+import { PersonName } from '@/components/ui/Avatar';
 import { Chip } from '@/components/ui/Chip';
 import { RESULT_LABELS } from '@/lib/labels';
 import { formatDate } from '@/lib/time';
@@ -8,12 +9,12 @@ import type { InterviewDetail } from '@/types/models';
 export function StudentContext({ detail }: Readonly<{ detail: InterviewDetail }>): ReactElement {
   return (
     <div className="flex flex-col gap-3 text-sm">
-      <div>
-        <p className="text-lg font-bold">{detail.student.name}</p>
-        <p className="text-muted">
-          {detail.student.campus} · Batch {detail.student.batch} · {detail.badge_name} Badge
-        </p>
-      </div>
+      <PersonName
+        name={detail.student.name}
+        size="lg"
+        nameClassName="text-lg font-bold"
+        detail={`${detail.student.campus} · Batch ${detail.student.batch} · ${detail.badge_name} Badge`}
+      />
       <div>
         <h3 className="font-semibold">Skills cleared</h3>
         <ul className="mt-1 flex flex-wrap gap-1">

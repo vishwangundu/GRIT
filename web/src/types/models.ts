@@ -61,3 +61,7 @@ export type SentResponse = S['SentResponse'];
 
 export type RegisterRequest = S['RegisterRequest'];
 export type RegistrationOptions = S['RegistrationOptions'];
+
+export type UsersResponse = S['UsersResponse'];
+export type UserRow = S['UserRow'];
+export type UserRole = UserRow['role'];

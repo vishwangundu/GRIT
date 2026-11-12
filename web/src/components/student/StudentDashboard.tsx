@@ -26,9 +26,10 @@ export function StudentDashboard(): ReactElement {
   if (!data || !rules) return <Loading label="Loading your dashboard…" />;
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-sm text-muted">
-        Hi {data.name.split(' ')[0]} · {data.campus}
-      </p>
+      <div>
+        <h1 className="text-3xl text-ink">Hi {data.name.split(' ')[0]}</h1>
+        <p className="mt-1 text-sm text-ink-soft">{data.campus} campus</p>
+      </div>
       <StatsRow stats={data.stats} />
       {data.journey ? (
         <InterviewCard

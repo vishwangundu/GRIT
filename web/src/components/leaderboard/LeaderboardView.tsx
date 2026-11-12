@@ -2,8 +2,8 @@
 
 import { type ReactElement, useState } from 'react';
 
+import { ChipTabs } from '@/components/ui/ChipTabs';
 import { Empty, ErrorBox, Loading } from '@/components/ui/StateView';
-import { Tabs } from '@/components/ui/Tabs';
 import { useApi } from '@/hooks/use-api';
 import { PATHS } from '@/lib/endpoints/paths';
 import type { Leaderboard } from '@/types/models';
@@ -30,9 +30,9 @@ export function LeaderboardView(): ReactElement {
   const { data: probe } = useApi<Leaderboard>(picked ? null : PATHS.leaderboard('pre'));
   const tier: Tier = picked ?? probe?.my_tier ?? 'pre';
   return (
-    <div className="flex flex-col gap-3">
+    <div className="grit-fill flex flex-col gap-3">
       <h1 className="text-3xl">Leaderboard</h1>
-      <Tabs tabs={TABS} active={tier} onChange={setPicked} label="Leaderboard tier" />
+      <ChipTabs options={TABS} value={tier} onChange={setPicked} label="Leaderboard tier" />
       <Body tier={tier} />
     </div>
   );

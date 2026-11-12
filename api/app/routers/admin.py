@@ -19,8 +19,9 @@ from app.schemas.admin import (
     SentResponse,
     TrackerResponse,
     TrackerTab,
+    UsersResponse,
 )
-from app.services import admin_actions, flags, tracker
+from app.services import admin_actions, flags, tracker, users
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 admin_only = require_role("admin")
@@ -34,6 +35,13 @@ async def get_tracker(
     conn: Conn = Depends(get_conn),
 ) -> TrackerResponse:
     return await tracker.get_tracker(conn, badge_id, tab)
+
+
+@router.get("/users")
+async def list_users(
+    _: Actor = Depends(admin_only), conn: Conn = Depends(get_conn)
+) -> UsersResponse:
+    return await users.list_users(conn)
 
 
 @router.post("/nudges")

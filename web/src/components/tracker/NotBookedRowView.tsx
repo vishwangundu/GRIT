@@ -1,7 +1,8 @@
 import type { ReactElement } from 'react';
 
-import { Button } from '@/components/ui/Button';
 import { Chip } from '@/components/ui/Chip';
+import { IconButton } from '@/components/ui/IconButton';
+import { SendIcon } from '@/components/ui/icons';
 import { WAIT_LABELS } from '@/lib/labels';
 import { formatDate, formatDateTime } from '@/lib/time';
 import type { NotBookedRow } from '@/types/models';
@@ -34,16 +35,16 @@ export function NotBookedRowView({ row, isBusy, onNudge }: Readonly<Props>): Rea
         ) : null}
       </td>
       <td className={CELL}>{row.last_nudged_at ? formatDateTime(row.last_nudged_at) : 'Never'}</td>
-      <td className={CELL}>
-        <Button
-          variant="ghost"
-          disabled={!row.can_nudge || isBusy}
+      <td className={`${CELL} text-right`}>
+        <IconButton
+          label={row.can_nudge ? `Send nudge: ${row.name}` : `Nudge not available yet: ${row.name}`}
+          isDisabled={!row.can_nudge || isBusy}
           onClick={() => {
             onNudge(row.student_id);
           }}
         >
-          Send nudge
-        </Button>
+          <SendIcon />
+        </IconButton>
       </td>
     </tr>
   );

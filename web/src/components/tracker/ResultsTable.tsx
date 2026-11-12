@@ -2,15 +2,16 @@
 
 import { type ReactElement, useState } from 'react';
 
-import { Button } from '@/components/ui/Button';
 import { Chip } from '@/components/ui/Chip';
+import { IconButton } from '@/components/ui/IconButton';
+import { CheckIcon, CloseIcon, FlagIcon, PencilIcon } from '@/components/ui/icons';
 import { RESULT_LABELS, stateLabel } from '@/lib/labels';
 import { formatDateTime } from '@/lib/time';
 import type { ResultRow } from '@/types/models';
 
 import { DecisionDialog, RaiseFlagDialog } from './FlagDialogs';
 import { OverrideDialog } from './OverrideDialog';
-import { CELL, StudentCell, Table } from './Table';
+import { CELL, InterviewerCell, StudentCell, Table } from './Table';
 
 const HEADERS = ['Student', 'Result', 'Recorded', 'Interviewer', 'Badge status', ''] as const;
 type Mode = 'flag' | 'uphold' | 'dismiss' | 'override';
@@ -21,45 +22,48 @@ function Actions({
 }: Readonly<{ row: ResultRow; onPick: (mode: Mode) => void }>): ReactElement {
   const canFlag = row.journey_state === 'passed' && row.award_status === 'active';
   return (
-    <div className="flex flex-wrap gap-1">
+    <div className="flex justify-end gap-1">
       {canFlag ? (
-        <Button
-          variant="ghost"
+        <IconButton
+          label={`Flag malpractice: ${row.name}`}
+          tone="danger"
           onClick={() => {
             onPick('flag');
           }}
         >
-          Flag malpractice
-        </Button>
+          <FlagIcon />
+        </IconButton>
       ) : null}
       {row.open_flag_id ? (
         <>
-          <Button
-            variant="ghost"
+          <IconButton
+            label={`Uphold flag (withdraw badge): ${row.name}`}
+            tone="danger"
             onClick={() => {
               onPick('uphold');
             }}
           >
-            Uphold
-          </Button>
-          <Button
-            variant="ghost"
+            <CheckIcon />
+          </IconButton>
+          <IconButton
+            label={`Dismiss flag: ${row.name}`}
+            tone="neutral"
             onClick={() => {
               onPick('dismiss');
             }}
           >
-            Dismiss
-          </Button>
+            <CloseIcon />
+          </IconButton>
         </>
       ) : null}
-      <Button
-        variant="ghost"
+      <IconButton
+        label={`Edit result: ${row.name}`}
         onClick={() => {
           onPick('override');
         }}
       >
-        Edit result
-      </Button>
+        <PencilIcon />
+      </IconButton>
     </div>
   );
 }
@@ -88,7 +92,7 @@ export function ResultsTable({
                 <Chip tone={result.tone}>{result.label}</Chip>
               </td>
               <td className={CELL}>{formatDateTime(row.recorded_at)}</td>
-              <td className={CELL}>{row.interviewer_name}</td>
+              <InterviewerCell name={row.interviewer_name} />
               <td className={CELL}>
                 {stateLabel(row.journey_state)}
                 {row.award_status ? (

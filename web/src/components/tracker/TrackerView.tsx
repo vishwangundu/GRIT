@@ -23,7 +23,11 @@ export function TrackerView(): ReactElement {
   const params = useSearchParams();
   const tab: TrackerTab = tabSchema.parse(params.get('tab'));
   const badgeId = badgeSchema.parse(params.get('badge'));
-  const { data, error, mutate } = useApi<Tracker>(PATHS.tracker(tab, badgeId), REFRESH_MS);
+  const { data, error, mutate, isLoading } = useApi<Tracker>(
+    PATHS.tracker(tab, badgeId),
+    REFRESH_MS,
+    true,
+  );
   const { data: rules } = useRules();
 
   function go(nextTab: TrackerTab, nextBadge: number | null): void {
@@ -33,28 +37,33 @@ export function TrackerView(): ReactElement {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <h1 className="text-3xl">Interview tracker</h1>
+    <div className="grit-fill flex flex-col gap-4">
+      <h1 className="text-3xl">Interview tracker</h1>
+      {data && data.badges.length > 0 ? (
         <BadgeFilter
-          badges={data?.badges ?? []}
+          badges={data.badges}
           value={badgeId}
           onChange={(b) => {
             go(tab, b);
           }}
         />
-      </div>
+      ) : null}
       {error ? <ErrorBox error={error} onRetry={() => void mutate()} /> : null}
       {!error && (!data || !rules) ? <Loading label="Loading tracker…" /> : null}
       {data && rules ? (
-        <TrackerBody
-          data={data}
-          slowAfterDays={rules.slow_after_days}
-          onTab={(t) => {
-            go(t, badgeId);
-          }}
-          onChanged={() => mutate()}
-        />
+        <div
+          aria-busy={isLoading}
+          className={`grit-fill flex flex-col gap-4 transition-opacity ${isLoading ? 'pointer-events-none opacity-50' : ''}`}
+        >
+          <TrackerBody
+            data={data}
+            slowAfterDays={rules.slow_after_days}
+            onTab={(t) => {
+              go(t, badgeId);
+            }}
+            onChanged={() => mutate()}
+          />
+        </div>
       ) : null}
     </div>
   );
