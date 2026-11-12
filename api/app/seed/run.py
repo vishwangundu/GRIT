@@ -1,6 +1,6 @@
 """Builds the full PRD section 11 demo. Used by scripts/seed.py and POST /internal/demo/reset."""
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 from uuid import UUID
 
 from app.core.clock import utc_now
@@ -27,10 +27,9 @@ _DEFAULT_WAITING_DAYS = 5
 _TANVI_NUDGED_DAYS_AGO = 3
 
 
-async def _windows(conn: Conn, ids: dict[str, UUID]) -> int:
-    now = utc_now()
-    today = now.astimezone(IST).date()
-    first_today = setup.floor_half_hour(now.astimezone(IST)) - timedelta(hours=2)
+async def _windows(conn: Conn, ids: dict[str, UUID], now_ist: datetime) -> int:
+    today = now_ist.date()
+    first_today = setup.floor_half_hour(now_ist) - timedelta(hours=2)
     created = await setup.window(conn, ids["priya"], first_today, first_today + timedelta(hours=3))
     for day in (today - timedelta(days=1), today - timedelta(days=2)):
         created += await setup.window(
@@ -71,12 +70,16 @@ async def _students(conn: Conn, users: Provisioner, cat: setup.Catalogue) -> dic
 
 
 async def seed_demo(conn: Conn, users: Provisioner) -> ResetResponse:
+    # One clock reading for the whole seed: creating Supabase users can take over a minute,
+    # and a second reading that crosses a half hour would look for slots that don't exist.
+    now_ist = utc_now().astimezone(IST)
+    first_today = setup.floor_half_hour(now_ist) - timedelta(hours=2)
     await setup.wipe(conn)
     cat = await setup.catalogue(conn)
     novice = cat.badge_ids["novice"]
     staff = {p.key: await setup.interviewer(conn, users, p, novice) for p in INTERVIEWERS}
     admin_id = await setup.profile(conn, users, ADMIN, "admin")
-    slot_count = await _windows(conn, staff)
+    slot_count = await _windows(conn, staff, now_ist)
     ids = await _students(conn, users, cat)
     cast = Cast(
         admin=Actor(user_id=admin_id, role="admin"),
@@ -84,8 +87,6 @@ async def seed_demo(conn: Conn, users: Provisioner) -> ResetResponse:
         rahul=Actor(user_id=staff["rahul"], role="interviewer"),
         badge_id=novice,
     )
-    now_ist = utc_now().astimezone(IST)
-    first_today = setup.floor_half_hour(now_ist) - timedelta(hours=2)
     days = (now_ist.date() - timedelta(days=1), now_ist.date() - timedelta(days=2), first_today)
     await apply_states(conn, cast, ids, days)
     await conn.execute(
