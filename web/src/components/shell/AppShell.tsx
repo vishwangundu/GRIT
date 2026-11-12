@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from 'next/navigation';
 import { type ReactElement, type ReactNode, useEffect } from 'react';
 
+import { Avatar } from '@/components/ui/Avatar';
 import { ErrorBox, Loading } from '@/components/ui/StateView';
 import { useClearApiCache } from '@/hooks/use-api';
 import { useMe } from '@/hooks/use-session';
@@ -12,6 +13,7 @@ import { getSupabase } from '@/lib/supabase/client';
 import type { Role } from '@/types/models';
 
 import { type NavItem, PageNav } from './PageNav';
+import { SignOutIcon } from './SignOutIcon';
 import { Wordmark } from './Wordmark';
 
 export type { NavItem } from './PageNav';
@@ -20,10 +22,12 @@ interface Props {
   area: Role;
   nav: readonly NavItem[];
   children: ReactNode;
+  /** Extra header buttons shown before the user, e.g. the student's Messages bell. */
+  headerActions?: ReactNode;
 }
 
 /** Signed-in frame. Hides other roles' areas; FastAPI still enforces every permission. */
-export function AppShell({ area, nav, children }: Readonly<Props>): ReactElement {
+export function AppShell({ area, nav, children, headerActions }: Readonly<Props>): ReactElement {
   const router = useRouter();
   const pathname = usePathname();
   const { data: me, error } = useMe();
@@ -47,13 +51,21 @@ export function AppShell({ area, nav, children }: Readonly<Props>): ReactElement
           <span className="mr-auto">
             <Wordmark onDark />
           </span>
-          <span className="hidden text-sm text-white/70 sm:inline">{me?.full_name}</span>
+          {me?.role === area ? headerActions : null}
+          {me ? (
+            <span className="flex items-center gap-2">
+              <Avatar name={me.full_name} />
+              <span className="hidden text-sm text-white/80 sm:inline">{me.full_name}</span>
+            </span>
+          ) : null}
           <button
             type="button"
             onClick={() => void signOut()}
-            className="min-h-9 text-sm font-semibold text-white underline-offset-4 hover:underline"
+            aria-label="Sign out"
+            title="Sign out"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-white/80 transition hover:bg-white/15 hover:text-white"
           >
-            Sign out
+            <SignOutIcon />
           </button>
         </div>
       </header>
