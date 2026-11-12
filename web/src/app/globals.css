@@ -1,0 +1,70 @@
+@import 'tailwindcss';
+
+/* GRIT brand (grit.niatindia.com): warm ink on light grey, cream panels, four accents.
+ * The *-strong shades are the accents darkened just enough for 4.5:1 text contrast. */
+@theme {
+  --color-ink: #1a1615;
+  --color-ink-soft: #453f3d;
+  --color-muted: #6b6461;
+  --color-page: #f5f5f5;
+  --color-cream: #fffef7;
+  --color-sand: #f4f1ee;
+  --color-grit-red: #d74247;
+  --color-grit-red-strong: #b8343a;
+  --color-grit-blue: #4277fb;
+  --color-grit-blue-strong: #2b5bd7;
+  --color-grit-purple: #70449c;
+  --color-grit-yellow: #f4df38;
+  --color-grit-green: #1e8a4c;
+  --color-line: #e4e0dc;
+  --color-line-strong: #cbc5c0;
+  --color-select: #eaf0ff;
+  /* Sign-in screens: the blue wash, slate borders and navy of the site's FAQ section. */
+  --color-wash: #f1f8ff;
+  --color-slate: #94a3b8;
+  --color-navy: #405388;
+  --color-navy-strong: #33437a;
+  --font-display: var(--font-familjen), 'Helvetica Neue', sans-serif;
+  --font-sans: var(--font-dm-sans), 'Helvetica Neue', sans-serif;
+}
+
+body {
+  background: var(--color-page);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* App surfaces: the brand (logo, nav, type) frames a calm, light working UI. */
+@utility grit-panel {
+  border-radius: 16px;
+  border: 1px solid var(--color-line);
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgb(26 22 21 / 0.04),
+    0 4px 12px rgb(26 22 21 / 0.04);
+}
+
+/* Inner tile used inside panels (list rows, slot rows). */
+@utility grit-tile {
+  border-radius: 12px;
+  border: 1px solid var(--color-line);
+  background: #fff;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-grit-blue-strong);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+dialog::backdrop {
+  background: rgb(26 22 21 / 0.45);
+}

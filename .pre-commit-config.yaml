@@ -1,0 +1,31 @@
+# Install once: `pipx install pre-commit && pre-commit install`
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.24.2
+    hooks:
+      - id: gitleaks
+  - repo: local
+    hooks:
+      - id: file-size
+        name: file size (500 non-blank lines)
+        entry: scripts/check-file-size.sh
+        language: script
+        pass_filenames: false
+      - id: ruff
+        name: ruff (api)
+        entry: bash -c 'cd api && uv run ruff check . && uv run ruff format --check .'
+        language: system
+        files: ^api/
+        pass_filenames: false
+      - id: mypy
+        name: mypy (api)
+        entry: bash -c 'cd api && uv run mypy app scripts'
+        language: system
+        files: ^api/
+        pass_filenames: false
+      - id: web-lint
+        name: eslint + prettier (web)
+        entry: bash -c 'cd web && npx eslint . --max-warnings=0 && npx prettier --check .'
+        language: system
+        files: ^web/
+        pass_filenames: false
