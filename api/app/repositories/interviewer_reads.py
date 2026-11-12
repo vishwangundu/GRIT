@@ -79,6 +79,13 @@ async def schedule(
         left join badges bd on bd.id = j.badge_id
         left join interview_outcomes o on o.booking_id = b.id
         where s.interviewer_id = $1 and s.start_at >= $2 and s.start_at < $3
+          and not (
+            s.status = 'cancelled' and b.id is null
+            and exists (
+              select 1 from availability_windows w
+              where w.id = s.window_id and w.deleted_at is not null
+            )
+          )
         order by s.start_at
         """,
         interviewer_id,

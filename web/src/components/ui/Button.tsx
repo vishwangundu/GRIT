@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, ReactElement } from 'react';
+import type { ButtonHTMLAttributes, ReactElement, ReactNode } from 'react';
 
 type Variant = 'primary' | 'secondary' | 'danger' | 'ghost' | 'navy';
 
@@ -35,10 +35,26 @@ export function Button({
       type={type}
       disabled={disabled === true || isBusy}
       aria-busy={isBusy}
-      className={`${BUTTON_BASE} ${BUTTON_VARIANTS[variant]} ${className}`}
+      className={`${BUTTON_BASE} ${BUTTON_VARIANTS[variant]} relative ${className}`}
       {...rest}
     >
-      {isBusy ? 'Working…' : children}
+      {isBusy ? <BusyContent>{children}</BusyContent> : children}
     </button>
+  );
+}
+
+/** Spinner over the hidden label, so the button keeps its width while busy. */
+function BusyContent({ children }: Readonly<{ children: ReactNode }>): ReactElement {
+  return (
+    <>
+      <span className="invisible inline-flex items-center gap-2">{children}</span>
+      <span className="absolute inset-0 flex items-center justify-center">
+        <span
+          aria-hidden="true"
+          className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent"
+        />
+        <span className="sr-only">Working…</span>
+      </span>
+    </>
   );
 }

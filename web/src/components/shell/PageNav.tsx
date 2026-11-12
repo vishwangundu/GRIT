@@ -4,12 +4,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ReactElement } from 'react';
 
-import { UnreadBadge } from './UnreadBadge';
-
 export interface NavItem {
   href: string;
   label: string;
-  showUnread?: boolean;
 }
 
 /** Section tabs under the header. Hidden when a role has only one page. */
@@ -29,7 +26,6 @@ export function PageNav({ items }: Readonly<{ items: readonly NavItem[] }>): Rea
           className="inline-flex min-h-10 shrink-0 items-center gap-1.5 border-b-2 border-transparent px-1.5 text-[13px] sm:px-3 sm:text-sm font-semibold text-muted hover:text-ink aria-[current=page]:border-grit-blue-strong aria-[current=page]:text-grit-blue-strong"
         >
           {item.label}
-          {item.showUnread ? <UnreadBadge /> : null}
         </Link>
       ))}
     </nav>

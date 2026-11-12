@@ -27,3 +27,6 @@ export const signUpSchema = profileDetailsSchema
   });
 
 export type SignUp = z.infer<typeof signUpSchema>;
+
+/** Query flag the register flow adds to /login so the sign-in screen can confirm success. */
+export const REGISTERED_PARAM = 'registered';

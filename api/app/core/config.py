@@ -24,9 +24,9 @@ class Settings(BaseSettings):
 
     def require(self) -> None:
         """Fail fast at startup when a required variable is missing."""
-        missing = [
-            name for name in ("database_url", "supabase_jwt_secret") if not getattr(self, name)
-        ]
+        missing = [] if self.database_url else ["database_url"]
+        if not (self.supabase_jwt_secret or self.supabase_url):
+            missing.append("supabase_jwt_secret or supabase_url")
         if missing:
             raise RuntimeError(f"Missing required settings: {', '.join(missing)}")
 

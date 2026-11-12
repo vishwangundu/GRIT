@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { registerProfile } from '@/lib/endpoints/auth';
-import { type SignUp, signUpSchema } from '@/lib/registration';
+import { REGISTERED_PARAM, type SignUp, signUpSchema } from '@/lib/registration';
 import { getSupabase } from '@/lib/supabase/client';
 
 import { useAction } from './use-action';
@@ -39,7 +39,9 @@ export function useRegister(): {
     }
     await clearCache();
     await registerProfile(details);
-    router.replace('/student');
+    await getSupabase().auth.signOut();
+    await clearCache();
+    router.replace(`/login?${REGISTERED_PARAM}=1`);
   }
 
   function signUp(form: FormData): void {

@@ -175,6 +175,18 @@ async def test_removed_window_can_be_added_again(db: asyncpg.Pool, world: World)
         assert again.slots_created == 2
 
 
+async def test_removed_window_slots_leave_the_schedule(db: asyncpg.Pool, world: World) -> None:
+    window = _tomorrow_window("18:00", "19:00")
+    async with db.acquire() as conn:
+        first = await availability.add_window(conn, world.interviewer, window)
+        await availability.remove_window(conn, world.interviewer, first.window_id)
+        sched = await interviewer_schedule.get_schedule(conn, world.interviewer, window.date)
+        assert sched.items == []
+        await availability.add_window(conn, world.interviewer, window)
+        sched = await interviewer_schedule.get_schedule(conn, world.interviewer, window.date)
+        assert [item.chip for item in sched.items] == ["open", "open"]
+
+
 async def test_block_and_unblock_open_slot(db: asyncpg.Pool, world: World) -> None:
     async with db.acquire() as conn:
         slot_id = await make_slot(conn, world.interviewer, hours_from_now(30))
